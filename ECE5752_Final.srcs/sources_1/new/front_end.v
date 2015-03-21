@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 03/18/2015 08:48:25 PM
+// Create Date: 03/20/2015 10:04:08 PM
 // Design Name: 
-// Module Name: nexus_vliw
+// Module Name: front_end
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,22 +20,11 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module nexus_vliw( //Inputs
+module front_end( //Inputs
 		   clock,
 		   reset
 		  );
    // Inputs
    input clock;  // System Clock
    input reset;  // System Reset
-
-   front_end f0 ( // Inputs
-		  .clock  (clock),
-		  .reset  (reset)
-		 );
-
-   back_end b0 ( // Inputs
-		  .clock  (clock),
-		  .reset  (reset)
-		);
-      
 endmodule

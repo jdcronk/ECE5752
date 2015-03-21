@@ -4,11 +4,12 @@
 	<FileSet Dir="sources_1" File="fileset.xml"/>
 	<FileSet Dir="constrs_1" File="fileset.xml"/>
 	<FileSet Dir="sim_1" File="fileset.xml"/>
+	<RunSet Dir="runs" File="runs.xml"/>
 	<DefaultLaunch Dir="$PRUNDIR"/>
 	<DefaultPromote Dir="$PROMOTEDIR"/>
 	<Config>
 		<Option Name="Id" Val="b1c58590775b401fa420b6b6fc01c8de"/>
-		<Option Name="Part" Val="xc6vlx760ff1760-2"/>
+		<Option Name="Part" Val="xc7k70tlfbg484-2L"/>
 		<Option Name="CompiledLibDir" Val="$PCACHEDIR/compile_simlib"/>
 		<Option Name="TargetLanguage" Val="Verilog"/>
 		<Option Name="TargetSimulator" Val="ISim"/>
