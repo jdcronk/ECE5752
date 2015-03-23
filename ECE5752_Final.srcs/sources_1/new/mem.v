@@ -1,4 +1,4 @@
-`timescale 1ns / 1ps
+`timescale 1ns / 100ps
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
 // Engineer: 
@@ -45,7 +45,7 @@ reg    [63:0] mem2proc_data, next_mem2proc_data;
 reg    [4:0]  mem2proc_response, mem2proc_tag, 
               next_mem2proc_response, next_mem2proc_tag;
 
-reg [63:0] unified_memory  [`MEM_64BIT_LINES - 1:0];
+reg [63:0] unified_memory  [`MEM_128BIT_LINES - 1:0];
 reg [63:0] loaded_data     [`NUM_MEM_TAGS:1];
 reg [15:0] cycles_left     [`NUM_MEM_TAGS:1];
 reg        waiting_for_bus [`NUM_MEM_TAGS:1];
@@ -110,7 +110,7 @@ end
 // Initialise the entire memory
 initial
 begin
-  for(i=0; i<`MEM_64BIT_LINES; i=i+1)
+  for(i=0; i<`MEM_128BIT_LINES; i=i+1)
   begin
     unified_memory[i] = 64'h0;
   end

@@ -28,7 +28,7 @@
 `define NUM_MEM_TAGS           31
 
 `define MEM_SIZE_IN_BYTES      (64*1024)
-`define MEM_64BIT_LINES        (`MEM_SIZE_IN_BYTES/8)
+`define MEM_128BIT_LINES        (`MEM_SIZE_IN_BYTES/16) //Each line will be 128 bits or 16 bytes
 
 // probably not a good idea to change this second one
 `define VIRTUAL_CLOCK_PERIOD   5.01 // Clock period from dc_shell
@@ -52,3 +52,11 @@
 //
 `define FALSE	1'h0
 `define TRUE	1'h1
+
+
+//
+// major opcodes used by the decode stage : bits [40:37]
+//
+
+`define ALU_INST     4'h0
+
