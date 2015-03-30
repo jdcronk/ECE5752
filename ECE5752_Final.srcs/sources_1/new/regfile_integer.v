@@ -10,77 +10,63 @@
 `timescale 1ns/100ps
 
 
-module regfile_integer(rda_idx, rda_out,                // read port A
-		       rdb_idx, rdb_out,                // read port B
-		       rdc_idx, rdc_out,                // read port C
-		       rdd_idx, rdd_out,                // read port D
-		       rde_idx, rde_out,                // read port E
-		       rdf_idx, rdf_out,                // read port F
-		       rdg_idx, rdg_out,                // read port G
-		       rdh_idx, rdh_out,                // read port H
-		       wra_idx, wra_data, wra_en,       // write port A
-		       wrb_idx, wrb_data, wrb_en,       // write port B
-		       wrc_idx, wrc_data, wrc_en,       // write port C
-		       wrd_idx, wrd_data, wrd_en,       // write port D
-		       wre_idx, wre_data, wre_en,       // write port E
-		       wrf_idx, wrf_data, wrf_en,       // write port F
-		       wr_clk);
+module regfile_integer(rd_idx, rd_out,         // read ports
+		       wr_idx, wr_data, wr_en, // write ports
+		       wr_clk
+		       );
 
-   input [4:0]   rda_idx, rdb_idx, rdc_idx, rdd_idx,
-		 rde_idx, rdf_idx, rdg_idx, rdh_idx;
-   input [4:0] 	 wra_idx, wrb_idx, wrc_idx,
-		 wrd_idx, wre_idx, wrf_idx;
-   input [63:0]  wra_data, wrb_data, wrc_data,
-		 wrd_data, wre_data, wrf_data;
-   input 	 wra_en, wrb_en, wrc_en,
-		 wrd_en, wre_en, wrf_en;
+   input [4:0]   rd_idx[`INT_READ_PORTS-1:0];    // 8 read ports
+   input [4:0] 	 wr_idx[`INT_WRITE_PORTS-1:0];   // 6 write ports
+   input [63:0]  wr_data[`INT_WRITE_PORTS-1:0]; // data for the write ports
+   input 	 wr_en[`INT_WRITE_PORTS-1:0];    // write enable bits for the write ports
    input 	 wr_clk;
 
-   output [63:0] rda_out, rdb_out, rdc_out, rdd_out,
-		 rde_out, rdf_out, rdg_out, rdh_out;
+   output [63:0] rd_out[`INT_READ_PORTS-1:0];
    
-   reg [63:0] 	 rda_out, rdb_out, rdc_out, rdd_out,
-		 rde_out, rdf_out, rdg_out, rdh_out;
-   reg [63:0] 	 registers[31:0];   // 32, 64-bit Registers
+   reg [63:0] 	 rd_out[`INT_READ_PORTS-1:0];
+   reg [63:0] 	 registers[`NUM_INT_REGS-1:0];   // 64-bit Registers
 
-   wire [63:0] 	 rda_reg = registers[rda_idx];
-   wire [63:0] 	 rdb_reg = registers[rdb_idx];
-   wire [63:0] 	 rdc_reg = registers[rdc_idx];
-   wire [63:0] 	 rdd_reg = registers[rdd_idx];
-   wire [63:0] 	 rde_reg = registers[rde_idx];
-   wire [63:0] 	 rdf_reg = registers[rdf_idx];
-   wire [63:0] 	 rdg_reg = registers[rdg_idx];
-   wire [63:0] 	 rdh_reg = registers[rdh_idx];
+   wire [63:0] 	 rd_reg[`INT_READ_PORTS-1:0];
 
-   //
-   // Read port A
-   //
-   always @*
-     if (rda_idx == `ZERO_REG)
-       rda_out = 0;
-     else if (wr_en && (wr_idx == rda_idx))
-       rda_out = wr_data;  // internal forwarding
-     else
-       rda_out = rda_reg;
+   genvar 	 i;
 
-   //
-   // Read port B
-   //
-   always @*
-     if (rdb_idx == `ZERO_REG)
-       rdb_out = 0;
-     else if (wr_en && (wr_idx == rdb_idx))
-       rdb_out = wr_data;  // internal forwarding
-     else
-       rdb_out = rdb_reg;
+   generate
+      for (i=0; i < `INT_READ_PORTS; i=i+1) begin:READ_WIRE
+	 assign rd_reg[i] = registers[rd_idx[i]];
+      end
+   endgenerate
 
-   //
-   // Write port A
-   //
-   always @(posedge wr_clk)
-     if (wra_en)
-       begin
-	  registers[wra_idx] <= `SD wra_data;
-       end
+   generate
+      for (i=0; i < `INT_READ_PORTS; i=i+1) begin:READ
+	 always @*
+	   if (rd_idx[i] == `ZERO_REG)
+	     rd_out[i] = 0;
+	   else if (wr_en[0] && (wr_idx[0] == rd_idx[i]))
+	     rd_out[i] = wr_data[0];  // internal forwarding
+	   else if (wr_en[1] && (wr_idx[1] == rd_idx[i]))
+	     rd_out[i] = wr_data[1];  // internal forwarding
+	   else if (wr_en[2] && (wr_idx[2] == rd_idx[i]))
+	     rd_out[i] = wr_data[2];  // internal forwarding
+	   else if (wr_en[3] && (wr_idx[3] == rd_idx[i]))
+	     rd_out[i] = wr_data[3];  // internal forwarding
+	   else if (wr_en[4] && (wr_idx[4] == rd_idx[i]))
+	     rd_out[i] = wr_data[4];  // internal forwarding
+	   else if (wr_en[5] && (wr_idx[5] == rd_idx[i]))
+	     rd_out[i] = wr_data[5];  // internal forwarding
+	   else
+	     rd_out[i] = rd_reg[i];
+      end
+   endgenerate
+
+   generate
+      for (i=0; i < `INT_WRITE_PORTS; i=i+1) begin:WRITE
+	 always @(posedge wr_clk)
+	   if (wr_en[i])
+	     begin
+		registers[wr_idx[i]] <= `SD wr_data[i];
+	     end
+      end
+   endgenerate
+
 
 endmodule // regfile

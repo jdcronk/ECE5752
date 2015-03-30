@@ -27,4 +27,8 @@ module back_end( //Inputs
    // Inputs
    input clock;  // System Clock
    input reset;  // System Reset
+
+   regfile_integer REG_INT (
+			    );
+   
 endmodule

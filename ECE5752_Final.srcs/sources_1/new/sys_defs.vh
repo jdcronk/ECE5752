@@ -3,9 +3,19 @@
 //   Modulename :  sys_defs.vh                                         //
 //                                                                     //
 //  Description :  This file has the macro-defines for macros used in  //
-//                 the pipeline design.                                //
+//                 the design.                                         //
 //                                                                     //
 /////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////
+//
+// Register file defines
+//
+//////////////////////////////////////////////
+
+`define INT_READ_PORTS 8
+`define INT_WRITE_PORTS 6
+`define NUM_INT_REGS 32
 
 //////////////////////////////////////////////
 //
