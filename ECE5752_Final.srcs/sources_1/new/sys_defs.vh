@@ -53,6 +53,10 @@
 `define FALSE	1'h0
 `define TRUE	1'h1
 
+//
+// register that always has the value zero
+//
+`define ZERO_REG        5'd31
 
 //
 // major opcodes used by the decode stage : bits [40:37]
