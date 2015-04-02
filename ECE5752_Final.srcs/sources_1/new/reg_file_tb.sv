@@ -21,7 +21,7 @@
 
 
 module reg_file_tb;
-    integer i;
+    integer i,y;
     reg clock;
     reg [4:0]   rd_idx[`INT_READ_PORTS-1:0];    // 8 read ports
     reg [4:0]      wr_idx[`INT_WRITE_PORTS-1:0];   // 6 write ports
@@ -64,6 +64,14 @@ module reg_file_tb;
     for (i = 0; i < `INT_READ_PORTS; i=i+1) begin:INIT
         rd_idx[i] = 0;
     end
+    y = 0;
+    for (i = 0; i < `INT_WRITE_PORTS; i=i+1) begin:INIT2
+        @(posedge clock);
+        wr_idx[i] = y;
+        wr_data[i] = 64'hDEADBEEF;
+        wr_en[i] = 1;
+        y=y+1;
+    end 
     @(posedge clock);
     wr_idx[0] = 0;
     wr_data[0] = 64'hDEADBEEF;

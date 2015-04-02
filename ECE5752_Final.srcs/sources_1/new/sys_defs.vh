@@ -69,8 +69,16 @@
 `define ZERO_REG        5'd31
 
 //
-// major opcodes used by the decode stage : bits [40:37]
+// ALU function codes
+//
+`define ALU_ADD     5'h00
+`define ALU_ADD_P1  5'h01
+
+//
+// major opcodes used by the decode stage : bits [40:33]
 //
 
-`define ALU_INST     4'h0
+`define ADD_INST      8'h80
+`define ADD_P1_INST   8'h81
+`define ADD_IMM_INST  8'h82 
 
