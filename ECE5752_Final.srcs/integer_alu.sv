@@ -35,12 +35,45 @@ module integer_alu(//Inputs
     
     reg [63:0] result;
     
+    // This function computes a signed less-than operation
+    function signed_lt;
+        input [63:0] a, b;
+    
+        if (a[63] == b[63]) 
+            signed_lt = (a < b); // signs match: signed compare same as unsigned
+        else
+            signed_lt = a[63];   // signs differ: a is smaller if neg, larger if pos
+    endfunction
+    
+    // This function computes a signed greater-than operation
+    function signed_gt;
+        input [63:0] a, b;
+        
+        if (a[63] == b[63]) 
+            signed_gt = (a > b); // signs match: signed compare same as unsigned
+        else
+            signed_gt = b[63];   // signs differ: b is smaller if neg, larger if pos
+    endfunction
+    
     always @*
     begin
         case (func)
-            `ALU_ADD:      result = opa + opb;
-            `ALU_ADD_P1:   result = opa + opb + 1;
-            default:       result = 64'hdeadbeefdeadbeef;
+            `ALU_ADD:       result = opa + opb;
+            `ALU_ADD_P1:    result = opa + opb + 1;
+            `ALU_SUB:       result = opa - opb;
+            `ALU_SUB_M1:    result = opa - opb - 1;
+            `ALU_AND:       result = opa & opb;
+            `ALU_OR:        result = opa | opb;
+            `ALU_XOR:       result = opa ^ opb;
+            `ALU_CMPLT:     result = { 63'd0, signed_lt(opa, opb) };
+            `ALU_CMPGT:     result = { 63'd0, signed_gt(opa, opb) };
+            `ALU_CMPEQ:     result = { 63'd0, opa == opb };
+            `ALU_CMPNE:     result = { 63'd0, opa != opb };
+            `ALU_CMPLE:     result = { 63'd0, (signed_lt(opa, opb) || (opa == opb)) };
+            `ALU_CMPGE:     result = { 63'd0, (signed_gt(opa, opb) || (opa == opb)) };
+            `ALU_SLL:       result = opa << opb[5:0];
+            `ALU_SRL:       result = opa >> opb[5:0];
+            default:        result = 64'hdeadbeefdeadbeef;
         endcase
     end
 endmodule
