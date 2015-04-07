@@ -1,11 +1,11 @@
-`timescale 1ns / 100ps
+`timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
 // Engineer: 
 // 
-// Create Date: 03/20/2015 10:04:08 PM
+// Create Date: 04/06/2015 10:28:00 PM
 // Design Name: 
-// Module Name: back_end
+// Module Name: inst_buffer
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,15 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module back_end( //Inputs
-		   clock,
-		   reset
-		  );
-   // Inputs
-   input clock;  // System Clock
-   input reset;  // System Reset
+module inst_buffer(
 
-   regfile_integer REG_INT (
-			    );
-   
+    );
 endmodule

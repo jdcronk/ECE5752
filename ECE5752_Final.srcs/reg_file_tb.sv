@@ -23,10 +23,10 @@
 module reg_file_tb;
     integer i,y;
     reg clock;
-    reg [4:0]   rd_idx[`INT_READ_PORTS-1:0];    // 8 read ports
-    reg [4:0]      wr_idx[`INT_WRITE_PORTS-1:0];   // 6 write ports
-    reg [63:0]  wr_data[`INT_WRITE_PORTS-1:0]; // data for the write ports
-    reg      wr_en[`INT_WRITE_PORTS-1:0];    // write enable bits for the write ports
+    reg [4:0]       rd_idx[`INT_READ_PORTS-1:0];    // 8 read ports
+    reg [4:0]       wr_idx[`INT_WRITE_PORTS-1:0];   // 6 write ports
+    reg [63:0]      wr_data[`INT_WRITE_PORTS-1:0]; // data for the write ports
+    reg             wr_en[`INT_WRITE_PORTS-1:0];    // write enable bits for the write ports
  
     wire [63:0] rd_out[`INT_READ_PORTS-1:0];
     
