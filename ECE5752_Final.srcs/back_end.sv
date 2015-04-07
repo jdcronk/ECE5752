@@ -37,6 +37,12 @@ module back_end( //Inputs
     //   execute unit
     ////////////////////////////////////////////////////
     regfile_integer REG_INT (
+                             .rd_idx(), 
+                             .rd_out(),
+                             .wr_idx(), 
+                             .wr_data(), 
+                             .wr_en(),
+                             .wr_clk(clock)
 	                         );
 	                         
     ////////////////////////////////////////////////////

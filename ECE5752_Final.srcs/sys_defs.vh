@@ -69,6 +69,14 @@
 `define ZERO_REG        5'd31
 
 //
+// ALU op mux controls
+//
+`define ALU_OPA_IS_REGA     2'b00
+
+`define ALU_OPB_IS_REGB     2'b00
+`define ALU_OPB_IS_IMM      2'b01
+
+//
 // ALU function codes
 //
 `define ALU_ADD     5'h00
