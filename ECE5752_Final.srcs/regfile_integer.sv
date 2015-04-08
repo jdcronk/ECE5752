@@ -16,7 +16,7 @@ module regfile_integer(rd_idx, rd_out,         // read ports
 		               );
 
     input  [4:0]    rd_idx   [`INT_READ_PORTS-1:0]; // 8 read ports
-    input  [4:0]    wr_idx  [`INT_WRITE_PORTS-1:0]; // 6 write ports
+    input  [4:0]    wr_idx  [`INT_WRITE_PORTS-1:0]; // 4 write ports
     input [63:0]    wr_data [`INT_WRITE_PORTS-1:0]; // data for the write ports
     input 	        wr_en   [`INT_WRITE_PORTS-1:0]; // write enable bits for the write ports
     input 	        wr_clk;
@@ -49,10 +49,6 @@ module regfile_integer(rd_idx, rd_out,         // read ports
                     rd_out[i] = wr_data[2];  // internal forwarding
                 else if (wr_en[3] && (wr_idx[3] == rd_idx[i]))
                     rd_out[i] = wr_data[3];  // internal forwarding
-                else if (wr_en[4] && (wr_idx[4] == rd_idx[i]))
-                    rd_out[i] = wr_data[4];  // internal forwarding
-                else if (wr_en[5] && (wr_idx[5] == rd_idx[i]))
-                    rd_out[i] = wr_data[5];  // internal forwarding
                 else
                     rd_out[i] = rd_reg[i];
         end
