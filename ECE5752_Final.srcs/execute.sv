@@ -65,6 +65,9 @@ module execute (// Inputs
         end
     endgenerate    
     
+    ////////////////////////////////////////////////////
+    // Integer ALU 0
+    ////////////////////////////////////////////////////
     integer_alu int_alu0(
                          .opa(alu_op_mux_out[0]),
                          .opb(alu_op_mux_out[1]),
@@ -72,7 +75,9 @@ module execute (// Inputs
                          .result(gpResults[0]),
                          .valid(valid[0])
                          );
-                         
+    ////////////////////////////////////////////////////
+    // Integer ALU 1
+    ////////////////////////////////////////////////////                         
     integer_alu int_alu1(
                          .opa(alu_op_mux_out[2]),
                          .opb(alu_op_mux_out[3]),
