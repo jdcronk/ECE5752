@@ -84,5 +84,31 @@ module reg_file_tb;
     wr_en[1] = 1;
     rd_idx[0] = 0;
     rd_idx[1] = 5;
+    for (i = 0; i < `INT_WRITE_PORTS; i=i+1) begin:INIT3
+        @(posedge clock);
+        wr_idx[i] = 0;
+        wr_data[i] = 64'hFFFFFFFF;
+        wr_en[i] = 1;
+    end
+    @(posedge clock);
+    wr_en[0] = 0;
+    wr_en[1] = 0;
+    wr_en[2] = 0;
+    wr_en[3] = 0;
+    @(posedge clock);
+    rd_idx[0] = 5;
+    rd_idx[1] = 6;
+    wr_idx[0] = 5;
+    wr_idx[1] = 6;
+    wr_idx[2] = 5;
+    wr_idx[3] = 6;
+    wr_data[0] = 64'hAAAAAAAA;
+    wr_data[1] = 64'hBBBBBBBB;
+    wr_data[2] = 64'hCCCCCCCC;
+    wr_data[3] = 64'hDDDDDDDD;
+    wr_en[0] = 1;
+    wr_en[1] = 1;
+    wr_en[2] = 1;
+    wr_en[3] = 1;
 end
 endmodule

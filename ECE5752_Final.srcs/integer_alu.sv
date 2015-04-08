@@ -25,15 +25,18 @@ module integer_alu(//Inputs
                    opb,
                    func,
                    // Output
-                   result
+                   result,
+                   valid
                    );
     input  [63:0] opa;
     input  [63:0] opb;
     input   [4:0] func;
     
     output [63:0] result;
+    output        valid;
     
     reg [63:0] result;
+    reg        valid;
     
     // This function computes a signed less-than operation
     function signed_lt;
@@ -57,6 +60,7 @@ module integer_alu(//Inputs
     
     always @*
     begin
+        valid = 1'b1;
         case (func)
             `ALU_ADD:       result = opa + opb;
             `ALU_ADD_P1:    result = opa + opb + 1;
@@ -73,7 +77,10 @@ module integer_alu(//Inputs
             `ALU_CMPGE:     result = { 63'd0, (signed_gt(opa, opb) || (opa == opb)) };
             `ALU_SLL:       result = opa << opb[5:0];
             `ALU_SRL:       result = opa >> opb[5:0];
-            default:        result = 64'hdeadbeefdeadbeef;
+            default:        begin
+                            result = 64'hdeadbeefdeadbeef;
+                            valid = 1'b0;
+                            end
         endcase
     end
 endmodule

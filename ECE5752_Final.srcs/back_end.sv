@@ -13,6 +13,8 @@ module back_end( //Inputs
     // Inputs
     input clock;  // System Clock
     input reset;  // System Reset
+    
+    
 
     ////////////////////////////////////////////////////
     // ~ Expand Stage ~
@@ -59,5 +61,13 @@ module back_end( //Inputs
      // - This stage will execute the instructions
      ////////////////////////////////////////////////////
      execute execute_stage(
+                           .clock(clock),
+                           .reset(reset),
+                           .inst(),
+                           .gpRegs(),
+                           .alu_funcs(),
+                           .gpOpselect(),
+                           .gpResults(),
+                           .valid()
                            );
 endmodule

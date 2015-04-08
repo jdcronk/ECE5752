@@ -28,7 +28,7 @@ module regfile_integer(rd_idx, rd_out,         // read ports
     
     wire [63:0] rd_reg[`INT_READ_PORTS-1:0];
     
-    genvar 	 i;
+    genvar 	 i, y;
     
     generate
         for (i=0; i < `INT_READ_PORTS; i=i+1) begin:READ_WIRE
@@ -41,28 +41,48 @@ module regfile_integer(rd_idx, rd_out,         // read ports
             always @*
                 if (rd_idx[i] == `ZERO_REG)
                     rd_out[i] = 0;
-                else if (wr_en[0] && (wr_idx[0] == rd_idx[i]))
-                    rd_out[i] = wr_data[0];  // internal forwarding
-                else if (wr_en[1] && (wr_idx[1] == rd_idx[i]))
-                    rd_out[i] = wr_data[1];  // internal forwarding
-                else if (wr_en[2] && (wr_idx[2] == rd_idx[i]))
-                    rd_out[i] = wr_data[2];  // internal forwarding
                 else if (wr_en[3] && (wr_idx[3] == rd_idx[i]))
                     rd_out[i] = wr_data[3];  // internal forwarding
+                else if (wr_en[2] && (wr_idx[2] == rd_idx[i]))
+                    rd_out[i] = wr_data[2];  // internal forwarding
+                else if (wr_en[1] && (wr_idx[1] == rd_idx[i]))
+                    rd_out[i] = wr_data[1];  // internal forwarding
+                else if (wr_en[0] && (wr_idx[0] == rd_idx[i]))
+                    rd_out[i] = wr_data[0];  // internal forwarding
                 else
                     rd_out[i] = rd_reg[i];
         end
     endgenerate
     
-    generate
-        for (i=0; i < `INT_WRITE_PORTS; i=i+1) begin:WRITE
-            always @(posedge wr_clk)
-                if (wr_en[i])
-                begin
-                    registers[wr_idx[i]] <= `SD wr_data[i];
-                end
+    always @(posedge wr_clk)
+    begin
+        if (wr_en[0])
+        begin
+            if (((wr_en[1] && (wr_idx[0] != wr_idx[1])) || !wr_en[1]) &&
+                ((wr_en[2] && (wr_idx[0] != wr_idx[2])) || !wr_en[2]) &&
+                ((wr_en[3] && (wr_idx[0] != wr_idx[3])) || !wr_en[3]))
+            begin
+                registers[wr_idx[0]] <= `SD wr_data[0];
+            end
         end
-    endgenerate
-
-
+        if (wr_en[1])
+        begin
+            if (((wr_en[2] && (wr_idx[1] != wr_idx[2])) || !wr_en[2]) &&
+                ((wr_en[3] && (wr_idx[1] != wr_idx[3])) || !wr_en[3]))
+            begin
+                registers[wr_idx[1]] <= `SD wr_data[1];
+            end
+        end
+        if (wr_en[2])
+        begin
+            if ((wr_en[3] && (wr_idx[2] != wr_idx[3])) || !wr_en[3])
+            begin
+                registers[wr_idx[2]] <= `SD wr_data[2];
+            end
+        end        
+        if (wr_en[3])
+        begin
+            registers[wr_idx[3]] <= `SD wr_data[3];
+        end                                
+    end
 endmodule // regfile

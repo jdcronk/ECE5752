@@ -9,7 +9,8 @@ module execute (// Inputs
                 gpOpselect,
                 
                 // Outputs
-                gpResults
+                gpResults,
+                valid
                 );
                 
     input           clock;
@@ -20,6 +21,7 @@ module execute (// Inputs
     input  [1:0]    gpOpselect  [7:0];
     
     output [63:0]   gpResults   [3:0];
+    output          valid       [3:0];
     
     reg [63:0] alu_op_mux_out [3:0];
     
@@ -62,5 +64,21 @@ module execute (// Inputs
             end
         end
     endgenerate    
+    
+    integer_alu int_alu0(
+                         .opa(alu_op_mux_out[0]),
+                         .opb(alu_op_mux_out[1]),
+                         .func(alu_funcs[0]),
+                         .result(gpResults[0]),
+                         .valid(valid[0])
+                         );
+                         
+    integer_alu int_alu1(
+                         .opa(alu_op_mux_out[2]),
+                         .opb(alu_op_mux_out[3]),
+                         .func(alu_funcs[1]),
+                         .result(gpResults[1]),
+                         .valid(valid[1])
+                         );
     
 endmodule
