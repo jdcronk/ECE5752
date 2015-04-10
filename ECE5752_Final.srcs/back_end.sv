@@ -24,6 +24,8 @@ module back_end( //Inputs
     reg [31:0] exp_reg_inst_bundle                 [5:0];
     reg  [4:0] exp_reg_rd_idx      [`INT_READ_PORTS-1:0];
     
+    reg [31:0] reg_ext_inst_bundle                 [5:0];
+    
     //Internal Wires
     wire reset_signal;
     
@@ -39,6 +41,10 @@ module back_end( //Inputs
     //   correct ex unit
     ////////////////////////////////////////////////////
     expand expand_stage (
+                         .clock(clock),
+                         .reset(reset),
+                         .inst_bundle(inst_bundle),
+                         .expanded_insts(inst_bundle_expanded)
                          );
     
     ////////////////////////////////////////////////////
@@ -85,7 +91,17 @@ module back_end( //Inputs
      ////////////////////////////////////////////////////
      always @(posedge clock)
      begin
-         
+         if(reset_signal)
+             begin
+                 for (i = 0; i < 6; i = i + 1)
+                 begin
+                     reg_ext_inst_bundle[i] <= `SD `NOOP_INST;
+                 end
+             end
+             else
+             begin
+                 reg_ext_inst_bundle <= `SD exp_reg_inst_bundle;
+             end
      end
      
      ////////////////////////////////////////////////////
@@ -95,7 +111,7 @@ module back_end( //Inputs
      execute execute_stage(
                            .clock(clock),
                            .reset(reset),
-                           .inst(),
+                           .inst(reg_ext_inst_bundle),
                            .gpRegs(),
                            .alu_funcs(),
                            .gpOpselect(),

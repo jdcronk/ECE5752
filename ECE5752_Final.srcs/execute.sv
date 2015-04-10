@@ -15,6 +15,15 @@ module execute (// Inputs
                 
     input           clock;
     input           reset;
+    ////////////////////////////////////////////
+    // There are 6 instruction ports
+    // Port assingments:
+    //       0 -> ALU 0
+    //       1 -> ALU 1
+    //       2 -> MEM ALU 0  (LD 0)
+    //       3 -> MEM ALU 1  (ST 0)
+    //       4 -> BR 0
+    //       5 -> BR 1
     input [31:0]    inst        [5:0];
     input [63:0]    gpRegs      [7:0];
     input  [4:0]    alu_funcs   [3:0];

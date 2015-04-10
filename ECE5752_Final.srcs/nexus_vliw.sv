@@ -24,18 +24,21 @@ module nexus_vliw(//Inputs
 		          clock,
 		          reset
 		          );
-   // Inputs
-   input clock;  // System Clock
-   input reset;  // System Reset
+    // Inputs
+    input clock;  // System Clock
+    input reset;  // System Reset
 
-   front_end f0 (// Inputs
-		         .clock  (clock),
-		         .reset  (reset)
+    wire [31:0] inst_bundle [5:0]; // The six instructions going to the expand stage    
+    
+    front_end f0 (// Inputs
+                  .clock  (clock),
+		          .reset  (reset),
+		          .inst_bundle (inst_bundle)
+		          );
+
+    back_end b0 (// Inputs
+	 	         .clock       (clock),
+		         .reset       (reset),
+		         .inst_bundle (inst_bundle)
 		         );
-
-   back_end b0 (// Inputs
-		        .clock  (clock),
-		        .reset  (reset)
-		        );
-      
 endmodule
