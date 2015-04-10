@@ -20,11 +20,16 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module front_end( //Inputs
-		   clock,
-		   reset
-		  );
-   // Inputs
-   input clock;  // System Clock
-   input reset;  // System Reset
+module front_end(//Inputs
+		         clock,
+		         reset,
+		         //Outputs
+		         inst_bundle
+		         );
+    // Inputs
+    input clock;  // System Clock
+    input reset;  // System Reset
+    
+    //Outpus
+    output [31:0] inst_bundle [5:0]; // The six instructions going to the expand stage
 endmodule
