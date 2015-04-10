@@ -20,22 +20,22 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module nexus_vliw( //Inputs
-		   clock,
-		   reset
-		  );
+module nexus_vliw(//Inputs
+		          clock,
+		          reset
+		          );
    // Inputs
    input clock;  // System Clock
    input reset;  // System Reset
 
-   front_end f0 ( // Inputs
-		  .clock  (clock),
-		  .reset  (reset)
-		 );
+   front_end f0 (// Inputs
+		         .clock  (clock),
+		         .reset  (reset)
+		         );
 
-   back_end b0 ( // Inputs
-		  .clock  (clock),
-		  .reset  (reset)
-		);
+   back_end b0 (// Inputs
+		        .clock  (clock),
+		        .reset  (reset)
+		        );
       
 endmodule
