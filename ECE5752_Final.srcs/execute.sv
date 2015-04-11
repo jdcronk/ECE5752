@@ -33,6 +33,7 @@ module execute (// Inputs
     output          valid       [3:0];
     
     reg [63:0] alu_op_mux_out [3:0];
+    reg [63:0] mem_op_mux_out [3:0];
     
     wire [63:0] alu_imm [1:0];
     
@@ -40,7 +41,7 @@ module execute (// Inputs
     
     generate
         for (i=0; i < 2; i=i+1) begin:ALU_imm
-            assign alu_imm[i] = {{57{inst[32]}}, inst[i][19:13]};
+            assign alu_imm[i] = {{57{inst[i][32]}}, inst[i][19:13]};
         end
     endgenerate
                
@@ -97,11 +98,47 @@ module execute (// Inputs
     // Mem ALU 0 (can be used as a normal ALU)
     ////////////////////////////////////////////////////
     mem_alu mem_alu_0(
+                      .clock(clock),
+                      .reset(reset),
+                      .inst(inst[2]),
+                      .regA(),
+                      .regB(),
+                      .regC(),
+                      .mem_op(),
+                      .alu_func(),
+                      .valid(),
+                      .Dcache_data(),
+                      .Dcache_valid(),
+                      .proc2Dcache_address(),
+                      .proc2Dcache_value(),
+                      .proc2Dcache_command(),
+                      .mem_retire_en(),
+                      .mem_retire_value(),
+                      .mem_retire_reg(),
+                      .mem_full()
                       );
     ////////////////////////////////////////////////////
     // Mem ALU 0 (can be used as a normal ALU)
     ////////////////////////////////////////////////////
     mem_alu mem_alu_1(
+                      .clock(clock),
+                      .reset(reset),
+                      .inst(inst[3]),
+                      .regA(),
+                      .regB(),
+                      .regC(),
+                      .mem_op(),
+                      .alu_func(),
+                      .valid(),
+                      .Dcache_data(),
+                      .Dcache_valid(),
+                      .proc2Dcache_address(),
+                      .proc2Dcache_value(),
+                      .proc2Dcache_command(),
+                      .mem_retire_en(),
+                      .mem_retire_value(),
+                      .mem_retire_reg(),
+                      .mem_full()    
                       );
 
     
