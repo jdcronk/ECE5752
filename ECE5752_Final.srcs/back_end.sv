@@ -25,6 +25,7 @@ module back_end( //Inputs
     reg  [4:0] exp_reg_rd_idx      [`INT_READ_PORTS-1:0];
     
     reg [31:0] reg_ext_inst_bundle                 [5:0];
+    reg [63:0] reg_ext_rd_out      [`INT_READ_PORTS-1:0];
     
     //Internal Wires
     wire reset_signal;
@@ -32,6 +33,9 @@ module back_end( //Inputs
     // Wires from Expand
     wire [31:0] inst_bundle_expanded                 [5:0];
     wire  [4:0] rd_idx_expanded      [`INT_READ_PORTS-1:0];
+    
+    // Wires from register read
+    wire [63:0] rd_reg_out      [`INT_READ_PORTS-1:0];
     
     assign reset_signal = reset;
 
@@ -78,7 +82,7 @@ module back_end( //Inputs
     ////////////////////////////////////////////////////
     regfile_integer REG_INT (
                              .rd_idx(exp_reg_rd_idx), 
-                             .rd_out(),
+                             .rd_out(rd_reg_out),
                              .wr_idx(), 
                              .wr_data(), 
                              .wr_en(),
@@ -97,10 +101,15 @@ module back_end( //Inputs
                  begin
                      reg_ext_inst_bundle[i] <= `SD `NOOP_INST;
                  end
+                 for (i = 0; i < `INT_READ_PORTS; i = i + 1)
+                 begin
+                     reg_ext_rd_out[i] <= `SD 0;
+                 end
              end
              else
              begin
                  reg_ext_inst_bundle <= `SD exp_reg_inst_bundle;
+                 reg_ext_rd_out      <= `SD rd_reg_out;
              end
      end
      
@@ -112,7 +121,7 @@ module back_end( //Inputs
                            .clock(clock),
                            .reset(reset),
                            .inst(reg_ext_inst_bundle),
-                           .gpRegs(),
+                           .gpRegs(reg_ext_rd_out),
                            .alu_funcs(),
                            .gpOpselect(),
                            .gpResults(),
