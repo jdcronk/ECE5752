@@ -43,11 +43,10 @@ module execute (// Inputs
             assign alu_imm[i] = {{57{inst[32]}}, inst[i][19:13]};
         end
     endgenerate
-            
-    
-    //
+               
+    ////////////////////////////////////////////////////
     // ALU opA mux
-    //
+    ////////////////////////////////////////////////////
     generate
         for (i=0; i < 4; i=i+2) begin:ALU_opA
             always @*
@@ -59,9 +58,9 @@ module execute (// Inputs
         end
     endgenerate
     
-    //
+    ////////////////////////////////////////////////////
     // ALU opB mux
-    //
+    ////////////////////////////////////////////////////
     generate
         for (i=1; i < 4 ; i=i+2) begin:ALU_opB
             always @*
@@ -94,5 +93,16 @@ module execute (// Inputs
                          .result(gpResults[1]),
                          .valid(valid[1])
                          );
+    ////////////////////////////////////////////////////
+    // Mem ALU 0 (can be used as a normal ALU)
+    ////////////////////////////////////////////////////
+    mem_alu mem_alu_0(
+                      );
+    ////////////////////////////////////////////////////
+    // Mem ALU 0 (can be used as a normal ALU)
+    ////////////////////////////////////////////////////
+    mem_alu mem_alu_1(
+                      );
+
     
 endmodule
