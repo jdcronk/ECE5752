@@ -115,7 +115,9 @@ module execute (// Inputs
                       .mem_retire_en(),
                       .mem_retire_value(),
                       .mem_retire_reg(),
-                      .mem_full()
+                      .result(),
+                      .mem_full(),
+                      .alu_valid()
                       );
     ////////////////////////////////////////////////////
     // Mem ALU 0 (can be used as a normal ALU)
@@ -138,8 +140,8 @@ module execute (// Inputs
                       .mem_retire_en(),
                       .mem_retire_value(),
                       .mem_retire_reg(),
-                      .mem_full()    
-                      );
-
-    
+                      .result(),
+                      .mem_full(),
+                      .alu_valid()
+                      );   
 endmodule

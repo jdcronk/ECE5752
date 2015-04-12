@@ -1,4 +1,4 @@
-`timescale 1ns / 1ps
+`timescale 1ns / 100ps
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
 // Engineer: 
@@ -39,7 +39,9 @@ module mem_alu(//Inputs
                mem_retire_en,
                mem_retire_value,
                mem_retire_reg,
-               mem_full
+               result,
+               mem_full,
+               alu_valid
                );
                
     input clock;
@@ -60,11 +62,71 @@ module mem_alu(//Inputs
     output reg          mem_retire_en;
     output reg [63:0]   mem_retire_value;
     output reg  [4:0]   mem_retire_reg;
+    output     [63:0]   result;
     output              mem_full;
+    output              alu_valid;
     
-    reg          mem_valid;
-    reg [63:0]   address, value;
     reg  [4:0]   dest_reg;
-    reg  [1:0]   mem_op;
+    
+    wire [4:0] start_alu;
+    wire       commit_load;
+    wire       commit_store;
+       
+    assign commit_load  = valid & (mem_op == `BUS_LOAD);
+    assign commit_store = valid & (mem_op == `BUS_STORE);
+    assign mem_full     = (proc2Dcache_command != `BUS_NONE);
+    assign start_alu    = (mem_full | (mem_op != `BUS_NONE) & valid) ? `NOOP_INST : alu_func;  
+    
+    always @(posedge clock) begin
+        if (reset) begin
+            dest_reg             <= `SD 0;
+            proc2Dcache_address  <= `SD 0;
+            proc2Dcache_value    <= `SD 0;
+            proc2Dcache_command  <= `SD `BUS_NONE;
+            mem_retire_en        <= `SD 0;
+            mem_retire_value     <= `SD 0;
+            mem_retire_reg       <= `SD 0;
+        end
+        else begin
+            if (commit_load) begin
+                dest_reg             <= `SD regC;
+                proc2Dcache_address  <= `SD regA;
+                proc2Dcache_value    <= `SD 0;
+                proc2Dcache_command  <= `SD `BUS_LOAD;
+            end
+            else if (commit_store) begin
+                dest_reg             <= `SD 0;
+                proc2Dcache_address  <= `SD regB;
+                proc2Dcache_value    <= `SD regA;
+                proc2Dcache_command  <= `SD `BUS_STORE;
+            end
+            
+            if (Dcache_valid && (proc2Dcache_command == `BUS_LOAD)) begin
+                mem_retire_en        <= `SD 1;
+                mem_retire_value     <= `SD Dcache_data;
+                mem_retire_reg       <= `SD dest_reg;
+                dest_reg             <= `SD 0;
+                proc2Dcache_address  <= `SD 0;
+                proc2Dcache_value    <= `SD 0;
+                proc2Dcache_command  <= `SD `BUS_NONE;
+            end
+            else begin
+                mem_retire_en        <= `SD 0;
+                mem_retire_value     <= `SD 0;
+                mem_retire_reg       <= `SD 0;
+            end
+        end
+    end
+    
+    ////////////////////////////////////////////////////
+    // Integer ALU
+    ////////////////////////////////////////////////////
+    integer_alu int_mem_alu(
+                            .opa(regA),
+                            .opb(regB),
+                            .func(start_alu),
+                            .result(result),
+                            .valid(alu_valid)
+                            );
     
 endmodule
