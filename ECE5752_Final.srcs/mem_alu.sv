@@ -29,7 +29,6 @@ module mem_alu(//Inputs
                regC,
                mem_op,
                alu_func,
-               valid,
                Dcache_data,
                Dcache_valid,
                //Outputs
@@ -52,7 +51,6 @@ module mem_alu(//Inputs
     input  [4:0]    regC;    // Destination register
     input  [1:0]    mem_op;
     input  [4:0]    alu_func;
-    input           valid;
     input [63:0]    Dcache_data;
     input           Dcache_valid;
     
@@ -72,10 +70,10 @@ module mem_alu(//Inputs
     wire       commit_load;
     wire       commit_store;
        
-    assign commit_load  = valid & (mem_op == `BUS_LOAD);
-    assign commit_store = valid & (mem_op == `BUS_STORE);
+    assign commit_load  = (mem_op == `BUS_LOAD);
+    assign commit_store = (mem_op == `BUS_STORE);
     assign mem_full     = (proc2Dcache_command != `BUS_NONE);
-    assign start_alu    = (mem_full | (mem_op != `BUS_NONE) & valid) ? `NOOP_INST : alu_func;  
+    assign start_alu    = (mem_full | (mem_op != `BUS_NONE)) ? `NOOP_INST : alu_func;  
     
     always @(posedge clock) begin
         if (reset) begin
@@ -105,6 +103,15 @@ module mem_alu(//Inputs
                 mem_retire_en        <= `SD 1;
                 mem_retire_value     <= `SD Dcache_data;
                 mem_retire_reg       <= `SD dest_reg;
+                dest_reg             <= `SD 0;
+                proc2Dcache_address  <= `SD 0;
+                proc2Dcache_value    <= `SD 0;
+                proc2Dcache_command  <= `SD `BUS_NONE;
+            end
+            else if (proc2Dcache_command == `BUS_STORE) begin
+                mem_retire_en        <= `SD 0;
+                mem_retire_value     <= `SD 0;
+                mem_retire_reg       <= `SD 0;
                 dest_reg             <= `SD 0;
                 proc2Dcache_address  <= `SD 0;
                 proc2Dcache_value    <= `SD 0;

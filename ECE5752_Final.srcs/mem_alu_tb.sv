@@ -9,7 +9,6 @@ module mem_alu_tb;
     reg  [4:0]    regC;    // Destination register
     reg  [1:0]    mem_op;
     reg  [4:0]    alu_func;
-    reg           valid;
     reg [63:0]    Dcache_data;
     reg           Dcache_valid;
     
@@ -31,7 +30,6 @@ module mem_alu_tb;
                       .regC(regC),
                       .mem_op(mem_op),
                       .alu_func(alu_func),
-                      .valid(valid),
                       .Dcache_data(Dcache_data),
                       .Dcache_valid(Dcache_valid),
                       .proc2Dcache_address(proc2Dcache_address),
@@ -73,21 +71,37 @@ module mem_alu_tb;
         regC = 5'h05;
         mem_op = `BUS_LOAD;
         alu_func = `ALU_ADD;
-        valid = 1'b1;
         Dcache_data = 64'h0;
         Dcache_valid = 0;
         @(posedge clock);
-        valid = 1'b0;
         alu_func = `NOOP_INST;
         mem_op = `BUS_NONE;
         @(posedge clock);
+        regA = 64'h50;
+        regB = 64'h100;
+        regC = 5'h05;
+        mem_op = `BUS_NONE;
+        alu_func = `ALU_ADD;
+        Dcache_data = 64'h0;
+        Dcache_valid = 0;
         @(posedge clock);
+        alu_func = `NOOP_INST;
         @(posedge clock);
         @(posedge clock);
         Dcache_data = 64'h500;
         Dcache_valid = 1;
         @(posedge clock);
         Dcache_valid = 0;
+        @(posedge clock);
+        regA = 64'h50;
+        regB = 64'h100;
+        regC = 5'h05;
+        mem_op = `BUS_NONE;
+        alu_func = `ALU_ADD;
+        Dcache_data = 64'h0;
+        Dcache_valid = 0;
+        @(posedge clock);
+        alu_func = `NOOP_INST;
     end    
                       
 endmodule
