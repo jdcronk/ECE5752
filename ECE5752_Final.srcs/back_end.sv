@@ -124,7 +124,18 @@ module back_end( //Inputs
                            .gpRegs(reg_ext_rd_out),
                            .alu_funcs(),
                            .gpOpselect(),
+                           .mem_dest(),
+                           .mem_op(),
+                           .Dcache_data(),
+                           .Dcache_valid(),
                            .gpResults(),
-                           .valid()
+                           .valid(),
+                           .mem_full(),
+                           .proc2Dcache_address(),
+                           .proc2Dcache_value(),
+                           .proc2Dcache_command(),
+                           .mem_retire_en(),
+                           .mem_retire_value(),
+                           .mem_retire_reg()
                            );
 endmodule
