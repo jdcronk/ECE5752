@@ -1,22 +1,8 @@
 `timescale 1ns / 100ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 03/18/2015 08:48:25 PM
-// Design Name: 
+// Engineer: Joshua Cronk
+// Design Name: Nexus VLIW Core
 // Module Name: nexus_vliw
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
 //////////////////////////////////////////////////////////////////////////////////
 
 
@@ -28,7 +14,7 @@ module nexus_vliw(//Inputs
     input clock;  // System Clock
     input reset;  // System Reset
 
-    wire [31:0] inst_bundle [5:0]; // The six instructions going to the expand stage    
+    wire [127:0] inst_bundle [1:0]; // The six instructions going to the expand stage in their bundles
     
     front_end f0 (// Inputs
                   .clock  (clock),

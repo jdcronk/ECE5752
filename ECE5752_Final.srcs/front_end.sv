@@ -1,24 +1,9 @@
 `timescale 1ns / 100ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 03/20/2015 10:04:08 PM
-// Design Name: 
+// Engineer: Joshua Cronk
+// Design Name: Nexus VLIW Core
 // Module Name: front_end
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
 //////////////////////////////////////////////////////////////////////////////////
-
 
 module front_end(//Inputs
 		         clock,
@@ -31,5 +16,5 @@ module front_end(//Inputs
     input reset;  // System Reset
     
     //Outpus
-    output [31:0] inst_bundle [5:0]; // The six instructions going to the expand stage
+    output [127:0] inst_bundle [1:0]; // The six instructions going to the expand stage in their bundles
 endmodule
