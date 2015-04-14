@@ -1,14 +1,9 @@
-/////////////////////////////////////////////////////////////////////////
-//                                                                     //
-//   Modulename :  regfile.v                                           //
-//                                                                     //
-//  Description :  This module creates the Regfile                     //
-//                                                                     //
-/////////////////////////////////////////////////////////////////////////
-
-
 `timescale 1ns/100ps
-
+//////////////////////////////////////////////////////////////////////////////////
+// Engineer: Joshua Cronk
+// Design Name: Nexus VLIW Core
+// Module Name: regfile_integer
+//////////////////////////////////////////////////////////////////////////////////
 
 module regfile_integer(rd_idx, rd_out,         // read ports
 		               wr_idx, wr_data, wr_en, // write ports

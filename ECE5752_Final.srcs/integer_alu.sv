@@ -1,24 +1,9 @@
 `timescale 1ns / 100ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 04/01/2015 09:18:04 PM
-// Design Name: 
+// Engineer: Joshua Cronk
+// Design Name: Nexus VLIW Core
 // Module Name: integer_alu
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
 //////////////////////////////////////////////////////////////////////////////////
-
 
 module integer_alu(//Inputs
                    opa,
