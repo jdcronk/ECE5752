@@ -16,7 +16,7 @@ module expand(//Inputs
     //Inputs
     input        clock;
     input        reset;
-    input [31:0] inst_bundle [5:0]; // The six incoming instructions
+    input [127:0] inst_bundle [1:0]; // The six incoming instructions in their bundles
             
     //Outputs
     output [31:0] expanded_insts [5:0]; // The six expanded instructions

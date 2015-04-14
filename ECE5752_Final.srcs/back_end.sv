@@ -9,13 +9,15 @@ module back_end( //Inputs
 		         clock,
 		         reset,
 		         inst_bundle
+		         
+		         //Outputs
 		        );
     integer i;
     		        
     // Inputs
-    input        clock;  // System Clock
-    input        reset;  // System Reset
-    input [31:0] inst_bundle [5:0]; // The six incoming instructions
+    input         clock;  // System Clock
+    input         reset;  // System Reset
+    input [127:0] inst_bundle [1:0]; // The six incoming instructions in their bundles
     
     // Outputs
     
@@ -89,52 +91,57 @@ module back_end( //Inputs
 	                         );
 	                         
     ////////////////////////////////////////////////////
-     // ~ Register Read Stage/Execute Stage 
-     //                           Pipeline Register~
-     ////////////////////////////////////////////////////
-     always @(posedge clock)
-     begin
-         if(reset_signal)
-             begin
-                 for (i = 0; i < 6; i = i + 1)
-                 begin
-                     reg_ext_inst_bundle[i] <= `SD `NOOP_INST;
-                 end
-                 for (i = 0; i < `INT_READ_PORTS; i = i + 1)
-                 begin
-                     reg_ext_rd_out[i] <= `SD 0;
-                 end
-             end
-             else
-             begin
-                 reg_ext_inst_bundle <= `SD exp_reg_inst_bundle;
-                 reg_ext_rd_out      <= `SD rd_reg_out;
-             end
-     end
+    // ~ Register Read Stage/Execute Stage 
+    //                           Pipeline Register~
+    ////////////////////////////////////////////////////
+    always @(posedge clock)
+    begin
+        if(reset_signal)
+            begin
+                for (i = 0; i < 6; i = i + 1)
+                begin
+                    reg_ext_inst_bundle[i] <= `SD `NOOP_INST;
+                end
+                for (i = 0; i < `INT_READ_PORTS; i = i + 1)
+                begin
+                    reg_ext_rd_out[i] <= `SD 0;
+                end
+            end
+            else
+            begin
+                reg_ext_inst_bundle <= `SD exp_reg_inst_bundle;
+                reg_ext_rd_out      <= `SD rd_reg_out;
+            end
+    end
      
-     ////////////////////////////////////////////////////
-     // ~ Execute Stage ~
-     // - This stage will execute the instructions
-     ////////////////////////////////////////////////////
-     execute execute_stage(
-                           .clock(clock),
-                           .reset(reset),
-                           .inst(reg_ext_inst_bundle),
-                           .gpRegs(reg_ext_rd_out),
-                           .alu_funcs(),
-                           .gpOpselect(),
-                           .mem_dest(),
-                           .mem_op(),
-                           .Dcache_data(),
-                           .Dcache_valid(),
-                           .gpResults(),
-                           .valid(),
-                           .mem_full(),
-                           .proc2Dcache_address(),
-                           .proc2Dcache_value(),
-                           .proc2Dcache_command(),
-                           .mem_retire_en(),
-                           .mem_retire_value(),
-                           .mem_retire_reg()
-                           );
+    ////////////////////////////////////////////////////
+    // ~ Execute Stage ~
+    // - This stage will execute the instructions
+    ////////////////////////////////////////////////////
+    execute execute_stage(
+                          .clock(clock),
+                          .reset(reset),
+                          .inst(reg_ext_inst_bundle),
+                          .gpRegs(reg_ext_rd_out),
+                          .alu_funcs(),
+                          .gpOpselect(),
+                          .mem_dest(),
+                          .mem_op(),
+                          .Dcache_data(),
+                          .Dcache_valid(),
+                          .gpResults(),
+                          .valid(),
+                          .mem_full(),
+                          .proc2Dcache_address(),
+                          .proc2Dcache_value(),
+                          .proc2Dcache_command(),
+                          .mem_retire_en(),
+                          .mem_retire_value(),
+                          .mem_retire_reg()
+                          );
+    ////////////////////////////////////////////////////
+    // ~ Common Data Bus (CDB) ~
+    // - This will move the data to the needed registers
+    ////////////////////////////////////////////////////
+    
 endmodule
