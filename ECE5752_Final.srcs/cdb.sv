@@ -28,12 +28,12 @@ module cdb(//Inputs
     input [63:0] alu_result [3:0];
     input        mem_valid  [1:0];
     input [63:0] mem_result [1:0];
-    input  [4:0] alu_dest   [3:0];
-    input  [4:0] mem_dest   [1:0];
+    input  [6:0] alu_dest   [3:0];
+    input  [6:0] mem_dest   [1:0];
     
     output reg        CDB_en    [3:0];
     output reg [63:0] CDB_value [3:0];
-    output reg  [4:0] CDB_dest  [3:0];
+    output reg  [6:0] CDB_dest  [3:0];
     
     always @(posedge clock) begin
         if (reset) begin

@@ -10,8 +10,8 @@ module regfile_integer(rd_idx, rd_out,         // read ports
 		               wr_clk
 		               );
 
-    input  [4:0]    rd_idx   [`INT_READ_PORTS-1:0]; // 8 read ports
-    input  [4:0]    wr_idx  [`INT_WRITE_PORTS-1:0]; // 4 write ports
+    input  [6:0]    rd_idx   [`INT_READ_PORTS-1:0]; // 8 read ports
+    input  [6:0]    wr_idx  [`INT_WRITE_PORTS-1:0]; // 4 write ports
     input [63:0]    wr_data [`INT_WRITE_PORTS-1:0]; // data for the write ports
     input 	        wr_en   [`INT_WRITE_PORTS-1:0]; // write enable bits for the write ports
     input 	        wr_clk;

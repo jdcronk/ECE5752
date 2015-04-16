@@ -30,10 +30,10 @@ module mem_alu(//Inputs
                
     input clock;
     input reset;
-    input [31:0]    inst;
+    input [40:0]    inst;
     input [63:0]    regA;    // Holds the load addr (or contains the register val for a normal ALU)
     input [63:0]    regB;    // Holds the store addr (or contains the register val for a normal ALU)
-    input  [4:0]    regC;    // Destination register
+    input  [6:0]    regC;    // Destination register
     input  [1:0]    mem_op;
     input  [4:0]    alu_func;
     input [63:0]    Dcache_data;
@@ -44,12 +44,12 @@ module mem_alu(//Inputs
     output reg  [1:0]   proc2Dcache_command;
     output reg          mem_retire_en;
     output reg [63:0]   mem_retire_value;
-    output reg  [4:0]   mem_retire_reg;
+    output reg  [6:0]   mem_retire_reg;
     output     [63:0]   result;
     output              mem_full;
     output              alu_valid;
     
-    reg  [4:0]   dest_reg;
+    reg  [6:0]   dest_reg;
     
     wire [4:0] start_alu;
     wire       commit_load;

@@ -40,7 +40,7 @@ module execute (// Inputs
     //       3 -> MEM ALU 1  (ST 0)
     //       4 -> BR 0
     //       5 -> BR 1
-    input [31:0]    inst        [5:0];
+    input [40:0]    inst        [5:0];
     ////////////////////////////////////////////
     // 8 Register values will come in
     // Assignments:
@@ -55,7 +55,7 @@ module execute (// Inputs
     input [63:0]    gpRegs       [7:0];
     input  [4:0]    alu_funcs    [3:0];
     input  [1:0]    gpOpselect   [7:0];
-    input  [4:0]    mem_dest     [1:0];
+    input  [6:0]    mem_dest     [1:0];
     input  [1:0]    mem_op       [1:0];
     input [63:0]    Dcache_data  [1:0];
     input           Dcache_valid [1:0];
@@ -68,7 +68,7 @@ module execute (// Inputs
     output  [1:0]   proc2Dcache_command [1:0];
     output          mem_retire_en       [1:0];
     output [63:0]   mem_retire_value    [1:0];
-    output  [4:0]   mem_retire_reg      [1:0];
+    output  [6:0]   mem_retire_reg      [1:0];
     
     reg [63:0] alu_op_mux_out [3:0];
     reg [63:0] mem_op_mux_out [3:0];

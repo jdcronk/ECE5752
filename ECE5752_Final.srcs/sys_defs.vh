@@ -19,15 +19,6 @@
 
 //////////////////////////////////////////////
 //
-// Load-Store Queue definitions
-//
-//////////////////////////////////////////////
-
-`define	LSQ_WIDTH				5
-`define	LSQ_SIZE				(1 << `LSQ_WIDTH)
-
-//////////////////////////////////////////////
-//
 // Error codes
 //
 //////////////////////////////////////////////
@@ -42,7 +33,6 @@
 // Memory/testbench attribute definitions
 //
 //////////////////////////////////////////////
-
 
 `define NUM_MEM_TAGS           31
 
@@ -65,6 +55,12 @@
 `define BUS_NONE       2'h0
 `define BUS_LOAD       2'h1
 `define BUS_STORE      2'h2
+
+//
+// Register dest
+//
+`define DEST_REG1  2'h0
+`define DEST_NONE  2'h1
 
 //
 // useful boolean single-bit definitions

@@ -19,22 +19,22 @@ module back_end( //Inputs
     input         clock;  // System Clock
     input         reset;  // System Reset
     input [127:0] inst_bundle [1:0]; // The six incoming instructions in their bundles
-    
+    input         valid       [1:0];
     // Outputs
     
     // Internal Registers
     // Registers from expand to the regsiter read
-    reg [31:0] exp_reg_inst_bundle                 [5:0];
-    reg  [4:0] exp_reg_rd_idx      [`INT_READ_PORTS-1:0];
-    reg  [4:0] exp_reg_dest_reg                    [3:0];
+    reg [40:0] exp_reg_inst_bundle                 [5:0];
+    reg  [6:0] exp_reg_rd_idx      [`INT_READ_PORTS-1:0];
+    reg  [6:0] exp_reg_dest_reg                    [3:0];
     reg  [4:0] exp_reg_alu_funcs                   [3:0];
     reg  [1:0] exp_reg_gpOpselect                  [7:0];
     reg  [1:0] exp_reg_mem_op                      [1:0]; 
     
     // Registers from the register read to execute
-    reg [31:0] reg_ext_inst_bundle                 [5:0];
+    reg [40:0] reg_ext_inst_bundle                 [5:0];
     reg [63:0] reg_ext_rd_out      [`INT_READ_PORTS-1:0];
-    reg  [4:0] reg_ext_dest_regs                   [3:0];
+    reg  [6:0] reg_ext_dest_regs                   [3:0];
     reg  [4:0] reg_ext_alu_funcs                   [3:0];
     reg  [1:0] reg_ext_gpOpselect                  [7:0];
     reg  [1:0] reg_ext_mem_op                      [1:0];     
@@ -43,9 +43,9 @@ module back_end( //Inputs
     wire reset_signal;
     
     // Wires from Expand
-    wire [31:0] inst_bundle_expanded                 [5:0];
-    wire  [4:0] rd_idx_expanded      [`INT_READ_PORTS-1:0];
-    wire  [4:0] dest_registers                       [3:0];
+    wire [40:0] inst_bundle_expanded                 [5:0];
+    wire  [6:0] rd_idx_expanded      [`INT_READ_PORTS-1:0];
+    wire  [6:0] dest_registers                       [3:0];
     wire  [4:0] exp_alu_funcs                        [3:0];
     wire  [1:0] exp_gpOpselect                       [7:0];
     wire  [1:0] exp_mem_op                           [1:0]; 
@@ -58,13 +58,13 @@ module back_end( //Inputs
     wire        ex_alu_valid    [3:0];
     wire [63:0] ex_mem_results  [1:0];
     wire        ex_mem_valid    [1:0];
-    wire  [4:0] ex_mem_reg_dest [1:0];
+    wire  [6:0] ex_mem_reg_dest [1:0];
     wire        ex_mem_full     [1:0]; 
     
     // Wires from CDB
     wire        CDB_reg_en    [3:0];
     wire [63:0] CDB_reg_value [3:0];
-    wire  [4:0] CDB_reg_dest  [3:0];
+    wire  [6:0] CDB_reg_dest  [3:0];
     
     assign reset_signal = reset;
 
@@ -84,7 +84,8 @@ module back_end( //Inputs
                          .dest_registers(dest_registers),
                          .alu_funcs(exp_alu_funcs),
                          .gpOpselect(exp_gpOpselect),
-                         .mem_op(exp_mem_op)
+                         .mem_op(exp_mem_op),
+                         .valid_inst()
                          );
     
     ////////////////////////////////////////////////////
