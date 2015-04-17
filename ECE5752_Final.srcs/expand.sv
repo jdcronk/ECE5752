@@ -118,13 +118,17 @@ module expand(//Inputs
     input         mem_full    [1:0]; // What mem units currently have an operation
             
     //Outputs
-    output [40:0] expanded_insts                  [5:0]; // The six expanded instructions
-    output  [6:0] rd_idx_expanded [`INT_READ_PORTS-1:0];
-    output  [6:0] dest_registers                  [3:0];
-    output  [4:0] alu_funcs                       [3:0];
-    output  [1:0] gpOpselect                      [7:0];
-    output  [1:0] mem_op                          [1:0];
-    output        valid_inst                      [5:0];
+    output reg [40:0] expanded_insts                  [5:0]; // The six expanded instructions
+    output reg  [6:0] rd_idx_expanded [`INT_READ_PORTS-1:0];
+    output reg  [6:0] dest_registers                  [3:0];
+    output reg  [4:0] alu_funcs                       [3:0];
+    output reg  [1:0] gpOpselect                      [7:0];
+    output reg  [1:0] mem_op                          [1:0];
+    output reg        valid_inst                      [5:0];
+    
+    // Wires to go into muxes
+    wire [1:0] internal_gpOpselect [11:0]; 
+    wire       internal_valid_inst  [5:0];
     
     // Register operands
     wire [6:0] r1_idx [5:0];
@@ -151,46 +155,120 @@ module expand(//Inputs
     assign r3_idx[3] = inst_bundle[1][32:25];
     assign r3_idx[4] = inst_bundle[1][74:67];
     assign r3_idx[5] = inst_bundle[1][114:107];
-    
+    /*
     assign expanded_insts[0] = inst_bundle[0][45:5];
     assign expanded_insts[1] = inst_bundle[0][86:46];
     assign expanded_insts[2] = inst_bundle[0][127:87];
     assign expanded_insts[3] = inst_bundle[1][45:5];
     assign expanded_insts[4] = inst_bundle[1][86:46];
     assign expanded_insts[5] = inst_bundle[1][127:87];
+    */
     
     single_decoder dec0(
                         .inst(inst_bundle[0][45:5]),
                         .valid(valid[0]),
-                        .opa_select(),
-                        .opb_select(),
+                        .opa_select(internal_gpOpselect[0]),
+                        .opb_select(internal_gpOpselect[1]),
                         .alu_func(),
                         .dest_reg(),
                         .mem_op(),
-                        .valid_inst()
+                        .valid_inst(internal_valid_inst[0])
                         );
     single_decoder dec1(
                         .inst(inst_bundle[0][86:46]),
                         .valid(valid[0]),
-                        .opa_select(),
-                        .opb_select(),
+                        .opa_select(internal_gpOpselect[2]),
+                        .opb_select(internal_gpOpselect[3]),
                         .alu_func(),
                         .dest_reg(),
                         .mem_op(),
-                        .valid_inst()
+                        .valid_inst(internal_valid_inst[1])
                         );
     single_decoder dec2(
                         .inst(inst_bundle[0][127:87]),
                         .valid(valid[0]),
-                        .opa_select(),
-                        .opb_select(),
+                        .opa_select(internal_gpOpselect[4]),
+                        .opb_select(internal_gpOpselect[5]),
                         .alu_func(),
                         .dest_reg(),
                         .mem_op(),
-                        .valid_inst()
+                        .valid_inst(internal_valid_inst[2])
                         );
+    single_decoder dec3(
+                        .inst(inst_bundle[1][45:5]),
+                        .valid(valid[1]),
+                        .opa_select(internal_gpOpselect[6]),
+                        .opb_select(internal_gpOpselect[7]),
+                        .alu_func(),
+                        .dest_reg(),
+                        .mem_op(),
+                        .valid_inst(internal_valid_inst[3])
+                        );
+    single_decoder dec4(
+                        .inst(inst_bundle[1][86:46]),
+                        .valid(valid[1]),
+                        .opa_select(internal_gpOpselect[8]),
+                        .opb_select(internal_gpOpselect[9]),
+                        .alu_func(),
+                        .dest_reg(),
+                        .mem_op(),
+                        .valid_inst(internal_valid_inst[4])
+                        );
+    single_decoder dec5(
+                        .inst(inst_bundle[1][127:87]),
+                        .valid(valid[1]),
+                        .opa_select(internal_gpOpselect[10]),
+                        .opb_select(internal_gpOpselect[11]),
+                        .alu_func(),
+                        .dest_reg(),
+                        .mem_op(),
+                        .valid_inst(internal_valid_inst[5])
+                        );        
+    
     always @* begin
+        valid_inst[0] = 1'b0;
+        valid_inst[1] = 1'b0;
+        valid_inst[2] = 1'b0;
+        valid_inst[3] = 1'b0;
+        valid_inst[4] = 1'b0;
+        valid_inst[5] = 1'b0;
         
+        gpOpselect[0] = `ALU_OPA_IS_REGA;
+        gpOpselect[1] = `ALU_OPA_IS_REGA;
+        gpOpselect[2] = `ALU_OPA_IS_REGA;
+        gpOpselect[3] = `ALU_OPA_IS_REGA;
+        gpOpselect[4] = `ALU_OPA_IS_REGA;
+        gpOpselect[5] = `ALU_OPA_IS_REGA;
+        gpOpselect[6] = `ALU_OPA_IS_REGA;
+        gpOpselect[7] = `ALU_OPA_IS_REGA;
+        
+        // Assign inst0
+        if(internal_valid_inst[0] && !mem_full[0]) begin
+            expanded_insts[0] = inst_bundle[0][45:5];
+            gpOpselect[4]     = internal_gpOpselect[0];
+            gpOpselect[5]     = internal_gpOpselect[1];
+            valid_inst[0]     = 1'b1;
+        end 
+        else if (internal_valid_inst[0] && !mem_full[1]) begin
+            expanded_insts[1] = inst_bundle[0][45:5];
+            gpOpselect[6]     = internal_gpOpselect[0];
+            gpOpselect[7]     = internal_gpOpselect[1];
+            valid_inst[1]     = 1'b1;
+        end
+        
+        // Assign inst3
+        if(!internal_valid_inst[0] && !mem_full[0] && internal_valid_inst[3]) begin
+            expanded_insts[0] = inst_bundle[1][45:5];
+            gpOpselect[4]     = internal_gpOpselect[6];
+            gpOpselect[5]     = internal_gpOpselect[7];
+            valid_inst[0]     = 1'b1;
+        end 
+        else if (!valid_inst[1] && internal_valid_inst[0] && !mem_full[1]) begin
+            expanded_insts[1] = inst_bundle[1][45:5];
+            gpOpselect[6]     = internal_gpOpselect[6];
+            gpOpselect[7]     = internal_gpOpselect[7];            
+            valid_inst[1]     = 1'b1;
+        end
     end
     
 endmodule

@@ -32,7 +32,7 @@ module back_end_tb;
         @(posedge clock);
         `SD;
         @(posedge clock);
-        inst_bundle[0][45:5] = 41'b10000001000000000010000010000000001000000;
+        inst_bundle[0][86:46] = 41'b10000001000000000010000010000000001000000;
         valid[0]             = 1'b1;
         @(posedge clock);
         valid[0]             = 1'b0;
