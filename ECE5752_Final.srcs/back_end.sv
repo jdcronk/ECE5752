@@ -137,6 +137,7 @@ module back_end( //Inputs
                              .wr_idx(CDB_reg_dest), 
                              .wr_data(CDB_reg_value), 
                              .wr_en(CDB_reg_en),
+                             .reset(reset),
                              .wr_clk(clock)
 	                         );
 	                         
