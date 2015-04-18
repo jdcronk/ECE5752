@@ -59,19 +59,19 @@ module cdb(//Inputs
             
             for (i = 0; i < 2; i = i + 1) begin:CDB_assign_mem
                 if (alu_valid[i+2]) begin
-                    CDB_en[i]    <= `SD 1;
-                    CDB_value[i] <= `SD alu_result[i+2];
-                    CDB_dest[i]  <= `SD alu_dest[i+2];
+                    CDB_en[i+2]    <= `SD 1;
+                    CDB_value[i+2] <= `SD alu_result[i+2];
+                    CDB_dest[i+2]  <= `SD alu_dest[i+2];
                 end
                 else if (mem_valid[i]) begin
-                    CDB_en[i]    <= `SD 1;
-                    CDB_value[i] <= `SD mem_result[i];
-                    CDB_dest[i]  <= `SD mem_dest[i];
+                    CDB_en[i+2]    <= `SD 1;
+                    CDB_value[i+2] <= `SD mem_result[i];
+                    CDB_dest[i+2]  <= `SD mem_dest[i];
                 end
                 else begin
-                    CDB_en[i]    <= `SD 0;
-                    CDB_value[i] <= `SD 0;
-                    CDB_dest[i]  <= `SD 0;    
+                    CDB_en[i+2]    <= `SD 0;
+                    CDB_value[i+2] <= `SD 0;
+                    CDB_dest[i+2]  <= `SD 0;    
                 end
             end
         end

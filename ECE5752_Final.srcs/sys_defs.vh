@@ -81,7 +81,7 @@
 `define ALU_OPB_IS_REGB     2'b00
 `define ALU_OPB_IS_IMM      2'b01
 
-`define NOOP_INST 41'h7FFFFFFFF
+`define NOOP_INST 41'h7FFFFFFFFF
 
 //
 // ALU function codes
