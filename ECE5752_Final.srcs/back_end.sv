@@ -9,18 +9,22 @@ module back_end( //Inputs
 		         clock,
 		         reset,
 		         inst_bundle,
-		         valid
+		         valid,
 		         
 		         //Outputs
+		         stall_buffer,
+		         cdb_data
 		        );
     integer i;
     		        
     // Inputs
     input         clock;  // System Clock
     input         reset;  // System Reset
-    input [127:0] inst_bundle [1:0]; // The six incoming instructions in their bundles
-    input         valid       [1:0];
+    input [127:0] inst_bundle  [1:0]; // The six incoming instructions in their bundles
+    input         valid        [1:0];
     // Outputs
+    output        stall_buffer [1:0]; // Stall the buffer if inst is waiting
+    output [63:0] cdb_data     [3:0];
     
     // Internal Registers
     // Registers from expand to the regsiter read
@@ -67,6 +71,7 @@ module back_end( //Inputs
     wire  [6:0] CDB_reg_dest  [3:0];
     
     assign reset_signal = reset;
+    assign cdb_data = CDB_reg_value;
 
     ////////////////////////////////////////////////////
     // ~ Expand Stage ~
@@ -85,7 +90,8 @@ module back_end( //Inputs
                          .alu_funcs(exp_alu_funcs),
                          .gpOpselect(exp_gpOpselect),
                          .mem_op(exp_mem_op),
-                         .valid_inst()
+                         .valid_inst(),
+                         .stall_buffer(stall_buffer)
                          );
     
     ////////////////////////////////////////////////////
