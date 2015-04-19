@@ -10,6 +10,7 @@ module back_end( //Inputs
 		         reset,
 		         inst_bundle,
 		         valid,
+		         pc,
 		         
 		         //Outputs
 		         stall_buffer,
@@ -22,6 +23,7 @@ module back_end( //Inputs
     input         reset;  // System Reset
     input [127:0] inst_bundle  [1:0]; // The six incoming instructions in their bundles
     input         valid        [1:0];
+    input  [63:0] pc           [1:0]; // Program counters for the bundles
     // Outputs
     output        stall_buffer [1:0]; // Stall the buffer if inst is waiting
     output [63:0] cdb_data     [3:0];
@@ -52,7 +54,9 @@ module back_end( //Inputs
     wire  [6:0] dest_registers                       [3:0];
     wire  [4:0] exp_alu_funcs                        [3:0];
     wire  [1:0] exp_gpOpselect                       [7:0];
-    wire  [1:0] exp_mem_op                           [1:0]; 
+    wire  [1:0] exp_mem_op                           [1:0];
+    wire        exp_stall_buffer                     [1:0];
+    wire        exp_inst_disp                        [5:0];
     
     // Wires from register read
     wire [63:0] rd_reg_out      [`INT_READ_PORTS-1:0];
@@ -72,6 +76,7 @@ module back_end( //Inputs
     
     assign reset_signal = reset;
     assign cdb_data = CDB_reg_value;
+    assign stall_buffer = exp_stall_buffer;
 
     ////////////////////////////////////////////////////
     // ~ Expand Stage ~
@@ -84,6 +89,9 @@ module back_end( //Inputs
                          .valid(valid),
                          .inst_bundle(inst_bundle),
                          .mem_full(ex_mem_full),
+                         .pc(pc),
+                         .dispatched(exp_inst_disp),
+                         .stalled(exp_stall_buffer),
                          .expanded_insts(inst_bundle_expanded),
                          .rd_idx_expanded(rd_idx_expanded),
                          .dest_registers(dest_registers),
@@ -91,7 +99,8 @@ module back_end( //Inputs
                          .gpOpselect(exp_gpOpselect),
                          .mem_op(exp_mem_op),
                          .valid_inst(),
-                         .stall_buffer(stall_buffer)
+                         .stall_buffer(exp_stall_buffer),
+                         .inst_dispatched(exp_inst_disp)
                          );
     
     ////////////////////////////////////////////////////
