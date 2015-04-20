@@ -22,9 +22,13 @@ module nexus_vliw(//Inputs
 		          .inst_bundle (inst_bundle)
 		          );
 
-    back_end b0 (// Inputs
-	 	         .clock       (clock),
-		         .reset       (reset),
-		         .inst_bundle (inst_bundle)
+    back_end be0(
+	       	     .clock(clock),
+		         .reset(reset),
+		         .inst_bundle(inst_bundle),
+		         .valid(),
+		         .pc(),
+		         .stall_buffer(),
+		         .cdb_data()
 		         );
 endmodule

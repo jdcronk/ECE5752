@@ -36,6 +36,8 @@ module back_end( //Inputs
     reg  [4:0] exp_reg_alu_funcs                   [3:0];
     reg  [1:0] exp_reg_gpOpselect                  [7:0];
     reg  [1:0] exp_reg_mem_op                      [1:0]; 
+    reg        exp_out_stall_buffer                [1:0];
+    reg        exp_out_inst_disp                   [5:0];
     
     // Registers from the register read to execute
     reg [40:0] reg_ext_inst_bundle                 [5:0];
@@ -90,8 +92,8 @@ module back_end( //Inputs
                          .inst_bundle(inst_bundle),
                          .mem_full(ex_mem_full),
                          .pc(pc),
-                         .dispatched(exp_inst_disp),
-                         .stalled(exp_stall_buffer),
+                         .dispatched(exp_out_inst_disp),
+                         .stalled(exp_out_stall_buffer),
                          .expanded_insts(inst_bundle_expanded),
                          .rd_idx_expanded(rd_idx_expanded),
                          .dest_registers(dest_registers),
@@ -114,6 +116,7 @@ module back_end( //Inputs
             for (i = 0; i < 6; i = i + 1)
             begin
                 exp_reg_inst_bundle[i] <= `SD `NOOP_INST;
+                exp_out_inst_disp[i]      <= `SD `FALSE;
             end
             for (i = 0; i < `INT_READ_PORTS; i = i + 1)
             begin
@@ -129,15 +132,19 @@ module back_end( //Inputs
             begin
                 exp_reg_mem_op[i] <= `SD `BUS_NONE;
             end
+            exp_out_stall_buffer[0] <= `SD `FALSE;
+            exp_out_stall_buffer[1] <= `SD `FALSE;
         end
         else
         begin
-            exp_reg_inst_bundle <= `SD inst_bundle_expanded;
-            exp_reg_rd_idx      <= `SD rd_idx_expanded;
-            exp_reg_dest_reg    <= `SD dest_registers; 
-            exp_reg_alu_funcs   <= `SD exp_alu_funcs;
-            exp_reg_gpOpselect  <= `SD exp_gpOpselect;
-            exp_reg_mem_op      <= `SD exp_mem_op;
+            exp_reg_inst_bundle  <= `SD inst_bundle_expanded;
+            exp_reg_rd_idx       <= `SD rd_idx_expanded;
+            exp_reg_dest_reg     <= `SD dest_registers; 
+            exp_reg_alu_funcs    <= `SD exp_alu_funcs;
+            exp_reg_gpOpselect   <= `SD exp_gpOpselect;
+            exp_reg_mem_op       <= `SD exp_mem_op;
+            exp_out_stall_buffer <= `SD exp_stall_buffer;
+            exp_out_inst_disp    <= `SD exp_inst_disp;
         end
     end
     

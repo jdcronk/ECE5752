@@ -44,12 +44,11 @@ module back_end_tb;
             
         @(posedge clock);
         $display("@@  %t  Deasserting System reset......\n@@\n@@", $realtime);
-        reset = 1'b0; 
-        @(posedge clock);
-        @(posedge clock);
+        `SD;
+        reset = 1'b0;
     end		
     
-    always @(posedge clock)
+    always @(posedge clock or posedge reset)
     begin
         if (reset) begin
             inst_bundle[0] <= `SD {`NOOP_INST,`NOOP_INST,`NOOP_INST,5'b00000};
@@ -60,14 +59,17 @@ module back_end_tb;
         end
         else begin
             if (clock_count == 0) begin
+                $display("@@  %t  Loading bundle 0......", $realtime);
                 inst_bundle[0][86:46]  <= `SD `ADD_R0_R1_R2_1;
-                inst_bundle[0][127:87] <= `SD `ADD_R3_R3_R3_1;
+                //inst_bundle[0][127:87] <= `SD `ADD_R3_R3_R3_1;
+                $display("@@  %t  Loading bundle 1...... ", $realtime);
                 inst_bundle[1][86:46]  <= `SD `MOV_R0_5;
                 inst_bundle[1][127:87] <= `SD `ADD_R2_R6_R7_1;
                 valid[0]               <= `SD 1;
                 valid[1]               <= `SD 1;
             end
             else if (clock_count == 1) begin
+                $display("@@  %t  Clock 1...... \n", $realtime);
                 if(stall_buffer[0] == 1) begin
                     valid[0] <= `SD 1;
                 end
@@ -89,7 +91,6 @@ module back_end_tb;
             end
             
             clock_count <= `SD (clock_count + 1);
-            reset       <= `SD 0;
         end
     end         
 endmodule
