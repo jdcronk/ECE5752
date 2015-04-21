@@ -4,7 +4,9 @@
 `define ADD_R3_R3_R3_1 41'b10000001_000000_0000011_0000011_0000011_000000
 `define ADD_R0_R0_R0   41'b10000000_000000_0000000_0000000_0000000_000000
 `define ADD_R2_R6_R7_1 41'b10000001_000000_0000111_0000110_0000010_000000
-`define MOV_R0_5       41'b10000010_000000_0000000_0000101_0000000_000000
+`define MOV_R0_5       41'b10000010_000000_0011111_0000101_0000000_000000
+`define MOV_R8_5       41'b10000010_000000_0011111_0000101_0001000_000000
+`define MOV_R9_5       41'b10000010_000000_0011111_0000101_0001001_000000
 
 module back_end_tb;
 
@@ -56,12 +58,16 @@ module back_end_tb;
             valid[0]       <= `SD 0;
             valid[1]       <= `SD 0; 
             clock_count    <= `SD 0;
+            pc[0]          <= `SD 0;
+            pc[1]          <= `SD 0;
         end
         else begin
             if (clock_count == 0) begin
+                pc[0]          <= `SD 0;
+                pc[1]          <= `SD 1;
                 $display("@@  %t  Loading bundle 0......", $realtime);
                 inst_bundle[0][86:46]  <= `SD `ADD_R0_R1_R2_1;
-                //inst_bundle[0][127:87] <= `SD `ADD_R3_R3_R3_1;
+                inst_bundle[0][127:87] <= `SD `ADD_R3_R3_R3_1;
                 $display("@@  %t  Loading bundle 1...... ", $realtime);
                 inst_bundle[1][86:46]  <= `SD `MOV_R0_5;
                 inst_bundle[1][127:87] <= `SD `ADD_R2_R6_R7_1;
@@ -70,6 +76,19 @@ module back_end_tb;
             end
             else if (clock_count == 1) begin
                 $display("@@  %t  Clock 1...... \n", $realtime);
+                pc[0]    <= `SD 2;
+                inst_bundle[0][86:46]  <= `SD `MOV_R8_5;
+                inst_bundle[0][127:87] <= `SD `MOV_R9_5;
+                valid[0] <= `SD 1;
+                if(stall_buffer[1] == 1) begin
+                    valid[1] <= `SD 1;
+                end
+                else begin
+                    valid[1] <= `SD 0;
+                end
+            end
+            else if (clock_count == 2) begin
+                $display("@@  %t  Clock 2...... \n", $realtime);
                 if(stall_buffer[0] == 1) begin
                     valid[0] <= `SD 1;
                 end
