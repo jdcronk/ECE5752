@@ -348,6 +348,9 @@ module expand(//Inputs
                 gpOpselect[5]      = internal_gpOpselect[1];
                 dest_registers[2]  = (internal_dest_reg[0] == `DEST_REG1) ? r1_idx[0] : 7'h00;
                 mem_op[0]          = internal_mem_op[0];
+                alu_funcs[2]       = internal_alufunc[0];
+                rd_idx_expanded[4] = r2_idx[0];
+                rd_idx_expanded[5] = r3_idx[0];
                 valid_inst[2]      = 1'b1;
                 inst_dispatched[0] = `TRUE;
             end 
@@ -357,6 +360,9 @@ module expand(//Inputs
                 gpOpselect[7]      = internal_gpOpselect[1];
                 dest_registers[3]  = (internal_dest_reg[0] == `DEST_REG1) ? r1_idx[0] : 7'h00;
                 mem_op[1]          = internal_mem_op[0];
+                alu_funcs[3]       = internal_alufunc[0];
+                rd_idx_expanded[6] = r2_idx[0];
+                rd_idx_expanded[7] = r3_idx[0];
                 valid_inst[3]      = 1'b1;
                 inst_dispatched[0] = `TRUE;
             end
@@ -408,6 +414,9 @@ module expand(//Inputs
                 gpOpselect[5]      = internal_gpOpselect[7];
                 dest_registers[2]  = (internal_dest_reg[3] == `DEST_REG1) ? r1_idx[3] : 7'h00;
                 mem_op[0]          = internal_mem_op[3];
+                alu_funcs[2]       = internal_alufunc[3];
+                rd_idx_expanded[4] = r2_idx[3];
+                rd_idx_expanded[5] = r3_idx[3];
                 valid_inst[2]      = 1'b1;
                 inst_dispatched[3] = `TRUE;
             end 
@@ -416,7 +425,10 @@ module expand(//Inputs
                 gpOpselect[6]      = internal_gpOpselect[6];
                 gpOpselect[7]      = internal_gpOpselect[7];          
                 dest_registers[3]  = (internal_dest_reg[3] == `DEST_REG1) ? r1_idx[3] : 7'h00;
-                mem_op[1]          = internal_mem_op[3];  
+                mem_op[1]          = internal_mem_op[3];
+                alu_funcs[3]       = internal_alufunc[3];
+                rd_idx_expanded[6] = r2_idx[3];
+                rd_idx_expanded[7] = r3_idx[3];  
                 valid_inst[3]      = 1'b1;
                 inst_dispatched[3] = `TRUE;
             end
@@ -486,6 +498,9 @@ module expand(//Inputs
                 gpOpselect[5]      = internal_gpOpselect[7];
                 dest_registers[2]  = (internal_dest_reg[3] == `DEST_REG1) ? r1_idx[3] : 7'h00;
                 mem_op[0]          = internal_mem_op[3];
+                alu_funcs[2]       = internal_alufunc[3];
+                rd_idx_expanded[4] = r2_idx[3];
+                rd_idx_expanded[5] = r3_idx[3];
                 valid_inst[2]      = 1'b1;
                 inst_dispatched[0] = `TRUE;
             end 
@@ -495,6 +510,9 @@ module expand(//Inputs
                 gpOpselect[7]      = internal_gpOpselect[7];
                 dest_registers[3]  = (internal_dest_reg[3] == `DEST_REG1) ? r1_idx[3] : 7'h00;
                 mem_op[1]          = internal_mem_op[3];
+                alu_funcs[3]       = internal_alufunc[3];
+                rd_idx_expanded[6] = r2_idx[3];
+                rd_idx_expanded[7] = r3_idx[3];
                 valid_inst[3]      = 1'b1;
                 inst_dispatched[0] = `TRUE;
             end
@@ -546,6 +564,9 @@ module expand(//Inputs
                 gpOpselect[5]      = internal_gpOpselect[1];
                 dest_registers[2]  = (internal_dest_reg[0] == `DEST_REG1) ? r1_idx[0] : 7'h00;
                 mem_op[0]          = internal_mem_op[0];
+                alu_funcs[2]       = internal_alufunc[0];
+                rd_idx_expanded[4] = r2_idx[0];
+                rd_idx_expanded[5] = r3_idx[0];
                 valid_inst[2]      = 1'b1;
                 inst_dispatched[0] = `TRUE;
             end 
@@ -554,7 +575,10 @@ module expand(//Inputs
                 gpOpselect[6]      = internal_gpOpselect[0];
                 gpOpselect[7]      = internal_gpOpselect[1];          
                 dest_registers[3]  = (internal_dest_reg[0] == `DEST_REG1) ? r1_idx[0] : 7'h00;
-                mem_op[1]          = internal_mem_op[0];  
+                mem_op[1]          = internal_mem_op[0]; 
+                alu_funcs[3]       = internal_alufunc[0];
+                rd_idx_expanded[6] = r2_idx[0];
+                rd_idx_expanded[7] = r3_idx[0]; 
                 valid_inst[3]      = 1'b1;
                 inst_dispatched[0] = `TRUE;
             end

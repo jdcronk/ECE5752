@@ -7,6 +7,9 @@
 `define MOV_R0_5       41'b10000010_000000_0011111_0000101_0000000_000000
 `define MOV_R8_5       41'b10000010_000000_0011111_0000101_0001000_000000
 `define MOV_R9_5       41'b10000010_000000_0011111_0000101_0001001_000000
+`define MOV_R10_5      41'b10000010_000000_0011111_0000101_0001010_000000
+`define MOV_R11_4      41'b10000010_000000_0011111_0000100_0001011_000000
+`define MOV_R12_6      41'b10000010_000000_0011111_0000110_0001100_000000
 
 module back_end_tb;
 
@@ -50,7 +53,7 @@ module back_end_tb;
         reset = 1'b0;
     end		
     
-    always @(posedge clock or posedge reset)
+    always @(posedge clock)
     begin
         if (reset) begin
             inst_bundle[0] <= `SD {`NOOP_INST,`NOOP_INST,`NOOP_INST,5'b00000};
@@ -66,9 +69,11 @@ module back_end_tb;
                 pc[0]          <= `SD 0;
                 pc[1]          <= `SD 1;
                 $display("@@  %t  Loading bundle 0......", $realtime);
+                inst_bundle[0][45:5]   <= `SD `MOV_R10_5;
                 inst_bundle[0][86:46]  <= `SD `ADD_R0_R1_R2_1;
                 inst_bundle[0][127:87] <= `SD `ADD_R3_R3_R3_1;
                 $display("@@  %t  Loading bundle 1...... ", $realtime);
+                inst_bundle[1][45:5]   <= `SD `MOV_R11_4;
                 inst_bundle[1][86:46]  <= `SD `MOV_R0_5;
                 inst_bundle[1][127:87] <= `SD `ADD_R2_R6_R7_1;
                 valid[0]               <= `SD 1;
@@ -77,6 +82,7 @@ module back_end_tb;
             else if (clock_count == 1) begin
                 $display("@@  %t  Clock 1...... \n", $realtime);
                 pc[0]    <= `SD 2;
+                inst_bundle[0][45:5]   <= `SD `MOV_R12_6;
                 inst_bundle[0][86:46]  <= `SD `MOV_R8_5;
                 inst_bundle[0][127:87] <= `SD `MOV_R9_5;
                 valid[0] <= `SD 1;
@@ -89,6 +95,7 @@ module back_end_tb;
             end
             else if (clock_count == 2) begin
                 $display("@@  %t  Clock 2...... \n", $realtime);
+                inst_bundle[0][45:5]   <= `SD `NOOP_INST;
                 if(stall_buffer[0] == 1) begin
                     valid[0] <= `SD 1;
                 end

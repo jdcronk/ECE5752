@@ -142,7 +142,7 @@ module execute (// Inputs
             begin
                 case (gpOpselect[i])
                     `ALU_OPB_IS_REGB: mem_op_mux_out[i - 4] = gpRegs[i];
-                    `ALU_OPB_IS_IMM:  mem_op_mux_out[i - 4] = mem_alu_imm[i >> 1];
+                    `ALU_OPB_IS_IMM:  mem_op_mux_out[i - 4] = mem_alu_imm[(i - 5) >> 1];
                 endcase
             end
         end
